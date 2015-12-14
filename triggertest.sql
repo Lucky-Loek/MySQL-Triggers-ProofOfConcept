@@ -14,7 +14,7 @@
 
 # We'll start with an easy table to add some data to
 CREATE TABLE ship (
-  ship_id INT(8) AUTO_INCREMENT PRIMARY KEY,
+  ship_id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255)
 ) ENGINE = InnoDB;
 
@@ -24,7 +24,8 @@ CREATE TABLE ship (
 # SET @username := 'admin'; and add a user row in this table
 # NOTE operation is 'INS' - 'UPD' - 'DEL'
 CREATE TABLE ship_audit (
-  ship_id INT(8) AUTO_INCREMENT PRIMARY KEY,
+  edit_id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ship_id INT(8),
   operation CHAR(3),
   updatedate DATETIME,
   name VARCHAR(255)
