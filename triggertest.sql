@@ -41,10 +41,35 @@ DELIMITER $$
 # operation is run on the ship table. It adds a row into the audit table with
 # the changes occured into the original ship table
 CREATE DEFINER = CURRENT_USER TRIGGER ship_audit_ins
-BEFORE INSERT
+AFTER INSERT
 ON ship
 FOR EACH ROW
   INSERT INTO ship_audit (ship_id, operation, updatedate, name)
   VALUES (NEW.SHIP_ID, 'INS', NOW(), NEW.NAME);
+END;
+$$
+
+# And the update trigger. This gets called and run whenever an upate
+# operation is run on the ship table. It adds a row into the audit table with
+# the changes occured into the original ship table
+CREATE DEFINER = CURRENT_USER TRIGGER ship_audit_ins
+AFTER UPDATE
+ON ship
+FOR EACH ROW
+  INSERT INTO ship_audit (ship_id, operation, updatedate, name)
+  VALUES (NEW.SHIP_ID, 'UPD', NOW(), NEW.NAME);
+END;
+$$
+
+# Now the delete trigger. This gets called and run whenever a delete
+# operation is run on the ship table. It adds a row into the audit table with
+# the changes occured into the original ship table
+CREATE DEFINER=CURRENT_USER TRIGGER ship_audit_del
+AFTER DELETE
+ON ship
+FOR EACH ROW
+BEGIN
+  INSERT INTO ship_audit (ship_id, operation, updatetime, name)
+  VALUES (OLD.SHIP_ID, 'DEL', NOW(), OLD.NAME);
 END;
 $$
