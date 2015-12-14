@@ -19,13 +19,32 @@ CREATE TABLE ship (
 ) ENGINE = InnoDB;
 
 # Now the audit table
-# NOTE to use this user row (given no user is specified in the triggers)
+# NOTE to use a user row (given no user is specified in the triggers)
 # you have to specify it somewhere in the DB connection with:
-# SET @username := 'admin';
+# SET @username := 'admin'; and add a user row in this table
+# NOTE operation is 'INS' - 'UPD' - 'DEL'
 CREATE TABLE ship_audit (
   ship_id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  operation CHAR(1),
+  operation CHAR(3),
   updatedate DATETIME,
-  name DECIMAL(10,2)
-/*  user VARCHAR(30)  */
+  name VARCHAR(255),
 ) ENGINE = InnoDB;
+
+/******************************************************************************
+*                               SET UP TRIGGERS
+******************************************************************************/
+
+# Define a delimiter for the entire following block now
+DELIMITER $$
+
+# Start with the insert trigger. This gets called and run whenever an insert
+# operation is run on the ship table. It adds a row into the audit table with
+# the changes occured into the original ship table
+CREATE DEFINER = CURRENT_USER TRIGGER ship_audit_ins
+BEFORE INSERT
+ON ship
+FOR EACH ROW
+  INSERT INTO ship_audit (ship_id, operation, updatedate, name)
+  VALUES (NEW.SHIP_ID, 'INS', NOW(), NEW.NAME);
+END;
+$$
