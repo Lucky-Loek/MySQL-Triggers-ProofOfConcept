@@ -1,5 +1,5 @@
-# audit-poc
-Proof of concept for MySQL audit logging 
+#About
+This is just a little test to see how triggers in MySQL work.
 
-# Goal
-Project at HZ University of Applied Sciences: program a proof of concept where you can log certain things in a MySQL to an audit table
+#Warning
+Triggers use quite the bit of memory, so always check if there's a way to do your thing without using MySQL triggers. Even though they're handy, they will have a huge performance impact on even the smallest databases.
